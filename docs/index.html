@@ -130,7 +130,7 @@ async function loadData(){
   ]);
   const enGrupo = new Set(pa.flatMap(p=>[p.cod_local,p.cod_visitante]));
   eq.filter(e=>enGrupo.has(e.cod_equipo)).sort((a,b)=>a.nombre.localeCompare(b.nombre))
-    .forEach((e,i)=>T[e.cod_equipo]={n:e.nombre,s:corto(e.nombre),c:PALETTE[i%PALETTE.length],img:e.escudo_url||""});
+    .forEach((e,i)=>T[e.cod_equipo]={n:e.nombre,s:corto(e.nombre),c:PALETTE[i%PALETTE.length],img:e.escudo_data||e.escudo_url||""});
   jo.forEach(j=>J[j.jornada]=isoToEs(j.fecha));
   M = pa.map(p=>{
     const [y,mo,d]=(p.fecha||"2099-01-01").split("-").map(Number);
