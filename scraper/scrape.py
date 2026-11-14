@@ -71,6 +71,29 @@ def get_json_navegador(url):
     return json.loads(res[1])
 
 
+def descargar_imagen(url):
+    """Descarga una imagen y la devuelve como data URI (o None si falla)."""
+    try:
+        if MODO == "navegador":
+            return _navegador().evaluate("""async (u) => {
+                const r = await fetch(u);
+                if (!r.ok) return null;
+                const b = await r.blob();
+                if (b.size > 400000) return null;
+                return await new Promise(ok => { const f = new FileReader(); f.onload = () => ok(f.result); f.readAsDataURL(b); });
+            }""", url)
+        import base64
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Referer": "https://ffcv.es/competiciones/"})
+        with urllib.request.urlopen(req, timeout=30) as r:
+            data, tipo = r.read(), r.headers.get_content_type()
+        if len(data) > 400000 or not tipo.startswith("image/"):
+            return None
+        return f"data:{tipo};base64," + base64.b64encode(data).decode()
+    except Exception as e:
+        print(f"  aviso: escudo {url}: {e}", file=sys.stderr)
+        return None
+
+
 def get_json(path, **params):
     global MODO
     url = API + path + ("?" + urllib.parse.urlencode(params) if params else "")
@@ -208,6 +231,12 @@ def main():
     print(f"{len(filas_alin)} filas de alineaciones de {len(EQUIPOS)} equipo(s)")
     print(f"{len(equipos)} equipos · {len(partidos)} partidos · "
           f"clasificación tras J{ultima_jugada} ({len(filas_clas)} filas)")
+
+    for e in equipos.values():   # todas las filas con las mismas columnas (lo exige Supabase)
+        e["escudo_data"] = descargar_imagen(e["escudo_url"]) if e.get("escudo_url") else None
+        if e.get("escudo_url"):
+            time.sleep(0.3)
+    print(f"{sum(1 for e in equipos.values() if e.get('escudo_data'))} escudos descargados")
 
     if DRY_RUN:
         print(json.dumps({"clasificacion": filas_clas[:3], "partido": partidos[:1]},
