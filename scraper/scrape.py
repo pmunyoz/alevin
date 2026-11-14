@@ -74,16 +74,17 @@ def get_json_navegador(url):
 def descargar_imagen(url):
     """Descarga una imagen y la devuelve como data URI (o None si falla)."""
     try:
-        if MODO == "navegador":
-            return _navegador().evaluate("""async (u) => {
-                const r = await fetch(u);
-                if (!r.ok) return null;
-                const b = await r.blob();
-                if (b.size > 400000) return null;
-                return await new Promise(ok => { const f = new FileReader(); f.onload = () => ok(f.result); f.readAsDataURL(b); });
-            }""", url)
         import base64
-        req = urllib.request.Request(url, headers={"User-Agent": UA, "Referer": "https://ffcv.es/competiciones/"})
+        if MODO == "navegador":
+            # petición desde el contexto de Playwright (sin restricciones CORS)
+            r = _navegador().context.request.get(url, headers={"Referer": "https://ffcv.es/"}, timeout=30000)
+            tipo = (r.headers.get("content-type") or "").split(";")[0]
+            data = r.body()
+            if not r.ok or len(data) > 400000 or not tipo.startswith("image/"):
+                print(f"  aviso: escudo {url}: HTTP {r.status} {tipo}", file=sys.stderr)
+                return None
+            return f"data:{tipo};base64," + base64.b64encode(data).decode()
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Referer": "https://ffcv.es/"})
         with urllib.request.urlopen(req, timeout=30) as r:
             data, tipo = r.read(), r.headers.get_content_type()
         if len(data) > 400000 or not tipo.startswith("image/"):
@@ -144,7 +145,8 @@ def goles(resultado):
 
 
 def escudo(url):
-    return ("https://ffcv.es" + url.split("?")[0]) if url else None
+    # los escudos se sirven desde el servidor de Novanet, no desde ffcv.es
+    return ("https://appwebffcv.novanet.es" + url.split("?")[0]) if url else None
 
 
 def main():
