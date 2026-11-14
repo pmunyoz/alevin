@@ -16,6 +16,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Instalar navegador (Playwright + Chromium)
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
       - name: Descargar de la FFCV y guardar en Supabase
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
@@ -24,4 +28,5 @@ jobs:
           FFCV_COMPETICION: "905432151"
           FFCV_GRUPO: "905432153"
           FFCV_EQUIPOS: "29538208"   # Club Costa City E
+          FFCV_MODO: "navegador"
         run: python scraper/scrape.py
