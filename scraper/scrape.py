@@ -5,15 +5,18 @@ Descarga calendario, resultados y clasificación de un grupo de la FFCV
 
 Variables de entorno:
   SUPABASE_URL          https://xxxx.supabase.co
-  SUPABASE_SERVICE_KEY  service_role key (secreto de GitHub Actions)
+  SUPABASE_SERVICE_KEY  secret key (sb_secret_…) o la antigua service_role
   FFCV_TEMPORADA        22         (2026/27)
   FFCV_COMPETICION      905432151  (Primera FFCV Aleví 1r. any Alacant)
   FFCV_GRUPO            905432153  (Grup 2)
   FFCV_EQUIPOS          29538208   (equipos de los que guardar alineaciones,
                                     separados por comas; Club Costa City E)
+  FFCV_MODO             auto (por defecto: directo y, si da 403, navegador),
+                        directo o navegador (Chromium con Playwright)
   DRY_RUN=1             solo imprime, no escribe en Supabase
 
-Solo usa la biblioteca estándar de Python.
+El modo directo solo usa la biblioteca estándar; el modo navegador necesita
+`pip install playwright && playwright install chromium`.
 """
 import json, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime
@@ -39,8 +42,46 @@ def nombre_corto(n):
     return f"{nombre} {apellidos[:1].upper()}." if apellidos else nombre
 
 
+MODO = os.environ.get("FFCV_MODO", "auto")   # auto | directo | navegador
+_page = None
+
+
+def _navegador():
+    """Abre Chromium sin ventana en ffcv.es y devuelve la página (Playwright)."""
+    global _page
+    if _page is None:
+        from playwright.sync_api import sync_playwright
+        pw = sync_playwright().start()
+        browser = pw.chromium.launch(headless=True)
+        ctx = browser.new_context(user_agent=UA, locale="es-ES")
+        _page = ctx.new_page()
+        _page.goto("https://ffcv.es/competiciones/", wait_until="domcontentloaded", timeout=60000)
+        print("  (modo navegador: Chromium abierto en ffcv.es)")
+    return _page
+
+
+def get_json_navegador(url):
+    page = _navegador()
+    res = page.evaluate("""async (u) => {
+        const r = await fetch(u, {headers: {'X-Requested-With': 'XMLHttpRequest'}});
+        return [r.status, await r.text()];
+    }""", url)
+    if res[0] != 200:
+        raise RuntimeError(f"HTTP {res[0]}")
+    return json.loads(res[1])
+
+
 def get_json(path, **params):
+    global MODO
     url = API + path + ("?" + urllib.parse.urlencode(params) if params else "")
+    if MODO == "navegador":
+        for intento in range(3):
+            try:
+                return get_json_navegador(url)
+            except Exception as e:
+                print(f"  aviso: {path} (navegador) intento {intento+1}: {e}", file=sys.stderr)
+                time.sleep(3 * (intento + 1))
+        raise RuntimeError(f"No se pudo leer {url} ni con navegador")
     req = urllib.request.Request(url, headers={
         "User-Agent": UA,
         "Accept": "application/json, text/javascript, */*; q=0.01",
@@ -54,6 +95,10 @@ def get_json(path, **params):
             return json.loads(txt)
         except Exception as e:  # red, 5xx o respuesta no-JSON (bloqueo)
             print(f"  aviso: {path} intento {intento+1}: {e}", file=sys.stderr)
+            if MODO == "auto" and "403" in str(e):
+                print("  la FFCV rechaza la petición directa: paso a modo navegador")
+                MODO = "navegador"
+                return get_json(path, **params)
             time.sleep(3 * (intento + 1))
     raise RuntimeError(f"No se pudo leer {url}")
 
@@ -185,7 +230,7 @@ def upsert(tabla, filas, on_conflict):
     url = f"{base}/rest/v1/{tabla}?on_conflict={on_conflict}"
     req = urllib.request.Request(url, method="POST",
         data=json.dumps(filas).encode(),
-        headers={"apikey": key, "Authorization": f"Bearer {key}",
+        headers={"apikey": key,  # claves nuevas sb_secret_…: solo en apikey
                  "Content-Type": "application/json",
                  "Prefer": "resolution=merge-duplicates,return=minimal"})
     with urllib.request.urlopen(req, timeout=30) as r:
