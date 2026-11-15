@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f7a3d">
 <title>Alevín 1º Año · Primera FFCV Alicante · Grup 2</title>
 <style>
 :root{
@@ -20,9 +21,13 @@ header{background:var(--accent);color:#fff;padding:18px 16px 14px}
 @media (prefers-color-scheme:dark){header{background:#0d4f29}}
 header h1{margin:0;font-size:19px;letter-spacing:-.2px}
 header p{margin:3px 0 0;font-size:13px;opacity:.85}
-nav{position:sticky;top:0;z-index:5;display:flex;background:var(--card);border-bottom:1px solid var(--line)}
-nav button{flex:1;border:0;background:none;padding:13px 4px 11px;font:600 14px inherit;font-family:inherit;color:var(--muted);border-bottom:3px solid transparent;cursor:pointer}
-nav button.on{color:var(--accent);border-bottom-color:var(--accent)}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom);box-shadow:0 -2px 12px rgba(0,0,0,.06)}
+nav button{flex:1;border:0;background:none;padding:8px 2px 7px;font:600 10.5px/1.2 inherit;font-family:inherit;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;-webkit-tap-highlight-color:transparent}
+nav button svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+nav button.on{color:var(--accent)}
+nav button.on svg{transform:translateY(-1px) scale(1.08)}
+nav button.on svg .fill{fill:currentColor;fill-opacity:.18}
+main{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
 main{max-width:720px;margin:0 auto;padding:14px 12px 40px}
 .bar{display:flex;align-items:center;gap:8px;margin:2px 0 12px}
 .bar select{flex:1;min-width:0;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit}
@@ -83,7 +88,7 @@ details[open].match summary::after{content:"▴"}
 .lineup h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);margin:0 0 4px}
 .lineup ul{list-style:none;margin:0;padding:0}.lineup li{padding:3px 0;font-size:13.5px;border-bottom:1px dashed var(--line)}
 .lineup li b{display:inline-block;width:22px;color:var(--muted)}.lineup li small{color:var(--muted);font-size:11px}
-nav button{font-size:13.5px}
+
 </style>
 </head>
 <body>
@@ -91,13 +96,13 @@ nav button{font-size:13.5px}
   <h1>Primera FFCV Aleví 1r. any · Grup 2</h1>
   <p>Fútbol 8 · Provincia de Alicante · Temporada 2026/27</p>
 </header>
-<nav>
-  <button data-v="proximos">Próximos</button>
-  <button data-v="jornadas">Jornadas</button>
-  <button data-v="clasif">Clasificación</button>
-  <button data-v="mio">Costa City E</button>
-</nav>
 <main id="app"></main>
+<nav aria-label="Secciones">
+  <button data-v="proximos" aria-label="Próximos partidos"><svg viewBox="0 0 24 24"><rect class="fill" x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><circle cx="12" cy="15" r="2.2"/></svg>Próximos</button>
+  <button data-v="jornadas" aria-label="Jornadas"><svg viewBox="0 0 24 24"><rect class="fill" x="3" y="3.5" width="18" height="17" rx="2.5"/><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h6"/></svg>Jornadas</button>
+  <button data-v="clasif" aria-label="Clasificación"><svg viewBox="0 0 24 24"><path class="fill" d="M7 3.5h10v5a5 5 0 0 1-10 0z"/><path d="M7 5.5H4.5a3 3 0 0 0 3 4M17 5.5h2.5a3 3 0 0 1-3 4M12 13.5v3.5M8.5 20.5h7M9.5 17h5v3.5h-5z"/></svg>Tabla</button>
+  <button data-v="mio" aria-label="Costa City E"><svg viewBox="0 0 24 24"><path class="fill" d="M12 2.8 19.5 5.5v5.8c0 4.6-3.1 8.2-7.5 9.9-4.4-1.7-7.5-5.3-7.5-9.9V5.5z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>Costa City E</button>
+</nav>
 
 <script>
 // ⚙️ Configura aquí tu proyecto de Supabase (la clave "anon" es pública, solo permite leer)
