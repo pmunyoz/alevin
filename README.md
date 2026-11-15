@@ -59,3 +59,12 @@ Los endpoints son públicos (los usa su propia web), pero no están documentados
 - hacer las peticiones desde un navegador sin interfaz con Playwright.
 
 Datos no oficiales, extraídos de la web de la FFCV. Ante cualquier duda, manda ffcv.es.
+
+## Botón «Forzar actualización»
+
+La web llama a la función de Supabase `actualizar` (`supabase/functions/actualizar/index.ts`), que lanza el workflow de GitHub. Para que el token de GitHub no quede a la vista en la web pública, la función lo guarda como secreto en Supabase. Además, no deja lanzar otra actualización si ya hay una en marcha o si la última empezó hace menos de 10 minutos. Mientras la función no esté instalada, el botón abre la página del workflow en GitHub.
+
+Para activarla:
+1. En GitHub, ve a *Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token*. En *Repository access* elige *Only select repositories → alevin*, y en *Permissions → Repository permissions → Actions* elige *Read and write*. Copia el token.
+2. En Supabase, ve a *Edge Functions → Secrets* y añade `GITHUB_TOKEN` con ese token.
+3. En *Edge Functions → Deploy a new function → Via Editor*, ponle de nombre `actualizar`, pega el contenido de `index.ts` y despliégala. Después, en los ajustes de la función, desactiva *Verify JWT* (*Enforce JWT verification*).
