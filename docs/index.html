@@ -85,7 +85,7 @@ img.crest{border-radius:6px;background:transparent}
 .m.mine::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--mine)}
 .m .st{grid-row:1/3;text-align:center;font:600 13px/1.1 var(--cond);color:var(--muted);border-right:1px solid var(--line);padding-right:8px;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
 .m .st b{font-size:15px;color:var(--ink)}
-.m .st.live{color:var(--loss)}
+.m .st .pend{color:var(--loss);font-size:11px;font-weight:600;line-height:1.1;margin-top:2px}
 .m .t{display:flex;align-items:center;gap:9px;min-width:0;padding:2px 0}
 .m .t .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .m .t.lose .nm{color:var(--muted)}
@@ -306,7 +306,7 @@ function matchRow(m,{showDay=false}={}){
   const mine=m.l===MI||m.v===MI;
   let st;
   if(p) st=`<b>Final</b>${showDay?`<span>${dayLabel(m.ts,false)}</span>`:""}`;
-  else if(m.ts<now) st=`<b style="color:var(--loss)">Pend.</b><span>${dayLabel(m.ts,false)}</span>`;
+  else if(m.ts<now) st=`<b>${m.h}</b>${showDay?`<span>${dayLabel(m.ts,false)}</span>`:""}<span class="pend">${sameDay(m.ts,now)?"Sin resultado":"Pendiente"}</span>`;
   else st=`<b>${m.h}</b>${showDay?`<span>${dayLabel(m.ts,false)}</span>`:""}`;
   const team=(k,w,l)=>`<div class="t ${w?"win":""} ${l?"lose":""} ${k===MI?"me":""}">${crest(k)}<span class="nm">${esc(T[k]?.s||k)}</span></div>`;
   return `<div class="m ${mine?"mine":""}" role="button" tabindex="0" aria-expanded="false">
