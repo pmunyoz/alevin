@@ -66,6 +66,10 @@ tr.lead td.pos{color:var(--accent)}
 @media (min-width:560px){.hide-s{display:table-cell}}
 .note{font-size:12.5px;color:var(--muted);margin:14px 4px 0}
 .note a{color:var(--accent)}
+.upd{margin:12px 4px 0;display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.upd .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-weight:700;font-size:14px;padding:10px 16px;border-radius:10px}
+@media (prefers-color-scheme:dark){.upd .btn{color:#0f1511}}
+.upd small{color:var(--muted);font-size:12px}
 .empty{color:var(--muted);text-align:center;padding:30px 10px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}
@@ -110,6 +114,7 @@ const SUPABASE_URL = "https://lmhqvpmfcgmgmyjfixos.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_j1zdUJklMirwCPxN_GcEBw_vobFV7Li";
 const GRUPO = "905432153";
 const MI = "29538208"; // Club Costa City 'E'
+const WORKFLOW_URL = "https://github.com/pmunyoz/alevin/actions/workflows/actualizar.yml";
 const SOURCE = "https://ffcv.es/competiciones/?view=partidos&cod_temporada=22&cod_competicion=905432151&cod_grupo=905432153#partidos";
 
 let UPDATED = "", T = {}, J = {}, M = [], CLAS = [], ALINE = [], ENTRENADOR = "", ESQUEMA = "";
@@ -294,7 +299,9 @@ function render(){
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===view||(view==="equipo"&&b.dataset.v==="clasif")));
   const app=document.getElementById("app");
   app.innerHTML=({proximos:vProximos,jornadas:vJornadas,clasif:vClasif,equipo:vEquipo,mio:vMio})[view]()+
-    `<p class="note">Datos oficiales de la FFCV actualizados el ${UPDATED}. <a href="${SOURCE}">Ver en ffcv.es</a></p>`;
+    `<p class="note">Datos oficiales de la FFCV actualizados el ${UPDATED}. <a href="${SOURCE}">Ver en ffcv.es</a></p>
+     <div class="upd"><a class="btn" href="${WORKFLOW_URL}" target="_blank" rel="noopener">↻ Forzar actualización</a>
+     <small>Abre GitHub: pulsa <b>Run workflow</b> y, en 2-3 minutos, recarga esta página. Solo funciona con tu cuenta de GitHub.</small></div>`;
   const $=id=>document.getElementById(id);
   if($("js")) $("js").onchange=e=>{jSel=+e.target.value;render()};
   if($("jp")) $("jp").onclick=()=>{jSel--;render()};
