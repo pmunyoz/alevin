@@ -1,0 +1,18 @@
+{
+  "name": "Alevín 1º Año · Costa City E",
+  "short_name": "Alevín CCE",
+  "description": "Partidos, resultados y clasificación de Primera FFCV Aleví 1r. any Alacant, Grup 2.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "es",
+  "background_color": "#0f1d33",
+  "theme_color": "#0f1d33",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
