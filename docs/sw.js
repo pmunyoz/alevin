@@ -1,5 +1,5 @@
 // Service worker: la app abre aunque no haya conexión, con los últimos datos vistos.
-const CACHE = "alevin-v2";
+const CACHE = "alevin-v3";
 const BASICO = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
