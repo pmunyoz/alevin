@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b3460"/><stop offset="1" stop-color="#0a1426"/></linearGradient>
+ <radialGradient id="ball" cx="0.38" cy="0.32" r="0.75"><stop offset="0" stop-color="#ffffff"/><stop offset="0.65" stop-color="#eef2f7"/><stop offset="1" stop-color="#b9c3d3"/></radialGradient>
+ <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#2fd07a" stop-opacity=".35"/><stop offset="1" stop-color="#2fd07a" stop-opacity="0"/></radialGradient>
+ <clipPath id="b"><circle cx="256" cy="262" r="150"/></clipPath>
+ <clipPath id="c"><rect width="512" height="512" rx="112"/></clipPath>
+ <filter id="sh" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#000" flood-opacity=".45"/></filter>
+</defs>
+<rect width="512" height="512" rx="112" fill="url(#bg)"/>
+<g clip-path="url(#c)" stroke="#ffffff" stroke-opacity=".09" stroke-width="5" fill="none">
+ <line x1="0" y1="262" x2="512" y2="262"/>
+ <circle cx="256" cy="262" r="202"/>
+ <rect x="-60" y="172" width="110" height="180"/>
+ <rect x="462" y="172" width="110" height="180"/>
+</g>
+<circle cx="256" cy="262" r="190" fill="url(#glow)"/>
+<g filter="url(#sh)"><circle cx="256" cy="262" r="150" fill="url(#ball)"/></g>
+<g clip-path="url(#b)">
+ <g fill="#14233f">
+  <polygon points="256.00,211.00 304.50,246.24 285.98,303.26 226.02,303.26 207.50,246.24"/>
+  <polygon points="256.00,172.48 208.47,137.94 226.62,82.07 285.38,82.07 303.53,137.94"/><polygon points="341.14,234.34 359.29,178.46 418.05,178.46 436.21,234.34 388.67,268.87"/><polygon points="308.62,334.42 367.37,334.42 385.53,390.30 338.00,424.84 290.46,390.30"/><polygon points="203.38,334.42 221.54,390.30 174.00,424.84 126.47,390.30 144.63,334.42"/><polygon points="170.86,234.34 123.33,268.87 75.79,234.34 93.95,178.46 152.71,178.46"/>
+ </g>
+ <g stroke="#14233f" stroke-width="5.3" stroke-linecap="round" opacity=".85"><line x1="256.0" y1="211.0" x2="256.0" y2="172.5"/><line x1="310.7" y1="186.8" x2="345.9" y2="138.2"/><line x1="304.5" y1="246.2" x2="341.1" y2="234.3"/><line x1="344.4" y1="290.7" x2="401.5" y2="309.3"/><line x1="286.0" y1="303.3" x2="308.6" y2="334.4"/><line x1="256.0" y1="355.0" x2="256.0" y2="415.0"/><line x1="226.0" y1="303.3" x2="203.4" y2="334.4"/><line x1="167.6" y1="290.7" x2="110.5" y2="309.3"/><line x1="207.5" y1="246.2" x2="170.9" y2="234.3"/><line x1="201.3" y1="186.8" x2="166.1" y2="138.2"/><line x1="208.5" y1="137.9" x2="310.7" y2="186.8"/><line x1="303.5" y1="137.9" x2="201.3" y2="186.8"/><line x1="359.3" y1="178.5" x2="344.4" y2="290.7"/><line x1="388.7" y1="268.9" x2="310.7" y2="186.8"/><line x1="367.4" y1="334.4" x2="256.0" y2="355.0"/><line x1="290.5" y1="390.3" x2="344.4" y2="290.7"/><line x1="221.5" y1="390.3" x2="167.6" y2="290.7"/><line x1="144.6" y1="334.4" x2="256.0" y2="355.0"/><line x1="123.3" y1="268.9" x2="201.3" y2="186.8"/><line x1="152.7" y1="178.5" x2="167.6" y2="290.7"/></g>
+ <circle cx="256" cy="262" r="150" fill="none" stroke="#0a1426" stroke-opacity=".25" stroke-width="6"/>
+</g>
+<ellipse cx="199.0" cy="187.0" rx="42.00000000000001" ry="21.000000000000004" fill="#fff" opacity=".55" transform="rotate(-30 199.0 187.0)"/>
+</svg>
